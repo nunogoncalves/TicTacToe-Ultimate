@@ -1,6 +1,9 @@
 table {
-  vertical-align: middle;
-  text-align: center;
+  border-collapse:collapse;
+}
+
+table td {
+  padding: 0px;
 }
 
 .outter_game {
@@ -10,8 +13,29 @@ table {
 }
 
 .inner_game {
-  cellspacing: 0;
   position: relative;
+  margin: 10px;
+}
+
+.northwest_td,
+.north_td,
+.west_td,
+.center_td,
+.southwest_td,
+.south_td {
+  border-right-style: solid;
+  border-color: #5A7FFA;
+  border-right-width: 5px;
+}
+
+.west_td,
+.center_td,
+.east_td {
+  border-top-style: solid;
+  border-top-width: 5px;
+  border-color: #5A7FFA;
+  border-bottom-style: solid;
+  border-bottom-width: 5px;
 }
 
 .won {
@@ -22,7 +46,7 @@ table {
   margin-right: 0px;
   width: 100% !important;
   height: 100% !important;
-  background-color: rgba(0, 0, 0, 0.66);
+  background-color: rgba(255, 255, 255, 0.88);
 }
 
 .canPlayHere {
@@ -41,30 +65,18 @@ table {
 
 .inner_game td:nth-child(2) {
   border-left-style: solid;
-  border-left-width: 1px;
+  border-left-width: 3px;
+  border-color: #33F211;
   border-right-style: solid;
-  border-right-width: 1px;
+  border-right-width: 3px;
 }
 
 .inner_game tr:nth-child(2) td {
   border-top-style: solid;
-  border-top-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-}
-
-.inner_game_middle_row {
-  border-top-style: solid;
   border-top-width: 3px;
+  border-color: #33F211;
   border-bottom-style: solid;
   border-bottom-width: 3px;
-}
-
-.inner_game_middle_column {
-  border-left-style: solid;
-  border-left-width: 3px;
-  border-right-style: solid;
-  border-right-width: 3px;
 }
 
 .playHereNext {

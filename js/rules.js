@@ -34,7 +34,7 @@ $.rules = {
   canPlayInSubGame: function($cell) {
     var $table = $cell.closest('table');
     if ($table.hasClass('finished')) { return true };
-    return $table.hasClass('playHereNext');
+    return $table.closest('td').hasClass('playHereNext');
   },
 
   winnerAtSmallGame: function(innerGameTable) {
