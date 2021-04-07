@@ -3,244 +3,488 @@
   <head>
     <link rel="stylesheet" type="text/css" href="css/game_table.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/plugins/alertify.bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="css/plugins/alertify.core.css">
-    <link rel="stylesheet" type="text/css" href="css/plugins/alertify.default.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
     <style type="text/css">
-      #game_container {
-        /*width: 100px;
-        height: 100px;
-        position: relative;*/
+
+      /* https://john.hu/centered-square-box/ */
+
+      .container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      #outter_game,
-      #overlay   {
+
+      .square {
+        align-items: unset;
+        position: relative;
+        width: 80vmin;
+        border: solid clear 5px;
+        box-sizing: border-box;
+      }
+
+      .square:after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+      }
+
+      .centered {
+        position: absolute;
         width: 100%;
         height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
+        display: flex;
+        flex-wrap: wrap;
       }
-      #overlay {
-        z-index: -10;
+
+      .inner-game {
+        width: 33.33%;
+        height: 33.33%; 
+        box-sizing: border-box;
+        border: 3px solid #5A7FFA;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .inner-game-square {
+        width: 33.33%;
+        height: 33.33%; 
+        box-sizing: border-box;
+        border: 2px solid #33F211;
+      }
+
+      .a,.c, .g, .i {
+        border: 0;
+      }
+
+      .b, .h {
+        border-top: 0;
+        border-bottom: 0;
+      }
+
+      .d, .f {
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .e {}
+
+      .inner-game-container {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 10px solid white;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .nought {
+        width: 100%;
+        height: 100%;
+        border: 5px solid #B12716;
+        border-radius: 50%;
+        box-sizing: border-box;
+      }
+
+      .winner {
+        position: relative;
+        z-index: 10;
+        top: 20px;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: rgba(255, 255, 255, 0.65);
+
       }
     </style>
   </head>
   <body>
-    <div id='info_container'>
-      <div id="inner_container">
-        <span>Next Player: </span><span id="next_player"><img src="img/nought.png" alt=""></span></br>
-        <span>Crosses: </span><span id="next_player">noughts</span></br>
-        <span>Nougts: </span><span id="next_player">noughts</span>
-        <div id="buttons_container">
-          <button onclick="$.ticTacToe.restart();">Restart</button>
+    <div>Next player: Noughts</div>
+    <div class="container">
+      <div class="square">
+        <div id="game_table" class="centered">
+          <div id="inner-game-A" class="inner-game a">
+            <div class="inner-game-container">
+              <div class="inner-game-square a" data-game-index="0" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="0" data-subgame-index="1">
+                <div class="nought"></div>
+              </div>
+              <div class="inner-game-square c" data-game-index="0" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="0" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="0" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="0" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="0" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="0" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="0" data-subgame-index="8"></div>
+            </div>
+          </div>
+          <div id="inner-game-B" class="inner-game b">
+            <div class="inner-game-container">
+              <div class="inner-game-square a" data-game-index="1" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="1" data-subgame-index="1"></div>
+              <div class="inner-game-square c" data-game-index="1" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="1" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="1" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="1" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="1" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="1" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="1" data-subgame-index="8"></div>
+              <div class="winner nought"></div>
+            </div>
+          </div>
+          <div id="inner-game-C" class="inner-game c">
+            <div class="inner-game-container">
+              <div class="inner-game-square a" data-game-index="2" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="2" data-subgame-index="1"></div>
+              <div class="inner-game-square c" data-game-index="2" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="2" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="2" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="2" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="2" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="2" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="2" data-subgame-index="8"></div>
+            </div>
+          </div>
+          <div id="inner-game-D" class="inner-game d">
+            <div class="inner-game-container">
+              <div class="inner-game-square a" data-game-index="3" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="3" data-subgame-index="1"></div>
+              <div class="inner-game-square c" data-game-index="3" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="3" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="3" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="3" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="3" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="3" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="3" data-subgame-index="8"></div>
+            </div>
+          </div>
+          <div id="inner-game-E" class="inner-game e">
+            <div class="inner-game-container">        
+              <div class="inner-game-square a" data-game-index="4" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="4" data-subgame-index="1"></div>
+              <div class="inner-game-square c" data-game-index="4" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="4" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="4" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="4" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="4" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="4" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="4" data-subgame-index="8"></div>
+            </div>
+          </div>
+          <div id="inner-game-F" class="inner-game f">
+            <div class="inner-game-container">
+              <div class="inner-game-square a" data-game-index="5" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="5" data-subgame-index="1"></div>
+              <div class="inner-game-square c" data-game-index="5" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="5" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="5" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="5" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="5" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="5" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="5" data-subgame-index="8"></div>
+            </div>
+          </div>
+          <div id="inner-game-G" class="inner-game g">
+            <div class="inner-game-container">
+              <div class="inner-game-square a" data-game-index="6" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="6" data-subgame-index="1"></div>
+              <div class="inner-game-square c" data-game-index="6" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="6" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="6" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="6" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="6" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="6" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="6" data-subgame-index="8"></div>
+            </div>
+          </div>
+          <div id="inner-game-H" class="inner-game h">
+            <div class="inner-game-container">
+              <div class="inner-game-square a" data-game-index="7" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="7" data-subgame-index="1"></div>
+              <div class="inner-game-square c" data-game-index="7" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="7" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="7" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="7" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="7" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="7" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="7" data-subgame-index="8"></div>
+            </div>
+          </div>
+          <div id="inner-game-I" class="inner-game i">
+            <div class="inner-game-container">
+              <div class="inner-game-square a" data-game-index="8" data-subgame-index="0"></div>
+              <div class="inner-game-square b" data-game-index="8" data-subgame-index="1"></div>
+              <div class="inner-game-square c" data-game-index="8" data-subgame-index="2"></div>
+              <div class="inner-game-square d" data-game-index="8" data-subgame-index="3"></div>
+              <div class="inner-game-square e" data-game-index="8" data-subgame-index="4"></div>
+              <div class="inner-game-square f" data-game-index="8" data-subgame-index="5"></div>
+              <div class="inner-game-square g" data-game-index="8" data-subgame-index="6"></div>
+              <div class="inner-game-square h" data-game-index="8" data-subgame-index="7"></div>
+              <div class="inner-game-square i" data-game-index="8" data-subgame-index="8"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div id="game_container">
-      <div id="overlay"></div>
-      <table class="outter_game">
-        <tr>
-          <td class="northwest_td">
-            <table class="inner_game northwest" data-compass="northwest">
-              <tr>
-                <td id="northwest_northwest" data-compass="northwest"></td>
-                <td id="northwest_north" data-compass="north"></td>
-                <td id="northwest_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="northwest_west" data-compass="west"></td>
-                <td id="northwest_center" data-compass="center"></td>
-                <td id="northwest_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="northwest_southwest" data-compass="southwest"></td>
-                <td id="northwest_south" data-compass="south"></td>
-                <td id="northwest_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-          <td class="north_td">
-            <table class="inner_game north" data-compass="north">
-              <tr>
-                <td id="north_northwest" data-compass="northwest"></td>
-                <td id="north_north" data-compass="north"></td>
-                <td id="north_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="north_west" data-compass="west"></td>
-                <td id="north_center" data-compass="center"></td>
-                <td id="north_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="north_southwest" data-compass="southwest"></td>
-                <td id="north_south" data-compass="south"></td>
-                <td id="north_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-          <td class="northest_td">
-            <table class="inner_game northeast"  data-compass="northest">
-              <tr>
-                <td id="northeast_northwest" data-compass="northwest"></td>
-                <td id="northeast_north" data-compass="north"></td>
-                <td id="northeast_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="northeast_west" data-compass="west"></td>
-                <td id="northeast_center" data-compass="center"></td>
-                <td id="northeast_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="northeast_southwest" data-compass="southwest"></td>
-                <td id="northeast_south" data-compass="south"></td>
-                <td id="northeast_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td class="west_td">
-            <table class="inner_game inner_game west" data-compass="west">
-              <tr>
-                <td id="west_northwest" data-compass="northwest"></td>
-                <td id="west_north" data-compass="north"></td>
-                <td id="west_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="west_west" data-compass="west"></td>
-                <td id="west_center" data-compass="center"></td>
-                <td id="west_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="west_southwest" data-compass="southwest"></td>
-                <td id="west_south" data-compass="south"></td>
-                <td id="west_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-          <td class="center_td">
-            <table class="inner_game inner_game center" data-compass="center">
-              <tr>
-                <td id="center_northwest" data-compass="northwest"></td>
-                <td id="center_north" data-compass="north"></td>
-                <td id="center_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="center_west" data-compass="west"></td>
-                <td id="center_center" data-compass="center"></td>
-                <td id="center_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="center_southwest" data-compass="southwest"></td>
-                <td id="center_south" data-compass="south"></td>
-                <td id="center_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-          <td class="east_td">
-            <table class="inner_game inner_game east" data-compass="east">
-              <tr>
-                <td id="east_northwest" data-compass="northwest"></td>
-                <td id="east_north" data-compass="north"></td>
-                <td id="center_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="center_west" data-compass="west"></td>
-                <td id="east_center" data-compass="center"></td>
-                <td id="east_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="east_southwest" data-compass="southwest"></td>
-                <td id="east_south" data-compass="south"></td>
-                <td id="east_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td class="southwest_td">
-            <table class="inner_game southwest" data-compass="southwest">
-              <tr>
-                <td id="southwest_northwest" data-compass="northwest"></td>
-                <td id="southwest_north" data-compass="north"></td>
-                <td id="southwest_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="southwest_west" data-compass="west"></td>
-                <td id="southwest_center" data-compass="center"></td>
-                <td id="southwest_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="southwest_southwest" data-compass="southwest"></td>
-                <td id="southwest_south" data-compass="south"></td>
-                <td id="southwest_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-          <td class="south_td">
-            <table class="inner_game south" data-compass="south">
-              <tr>
-                <td id="south_northwest" data-compass="northwest"></td>
-                <td id="south_north" data-compass="north"></td>
-                <td id="south_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="south_west" data-compass="west"></td>
-                <td id="south_center" data-compass="center"></td>
-                <td id="south_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="south_southwest" data-compass="southwest"></td>
-                <td id="south_south" data-compass="south"></td>
-                <td id="south_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-          <td class="southest_td">
-            <table class="inner_game southeast" data-compass="southest">
-              <tr>
-                <td id="southeast_northwest" data-compass="northwest"></td>
-                <td id="southeast_north" data-compass="north"></td>
-                <td id="southeast_northeast" data-compass="northeast"></td>
-              </tr>
-              <tr>
-                <td id="southeast_west" data-compass="west"></td>
-                <td id="southeast_center" data-compass="center"></td>
-                <td id="southeast_east" data-compass="east"></td>
-              </tr>
-              <tr>
-                <td id="southeast_southwest" data-compass="southwest"></td>
-                <td id="southeast_south" data-compass="south"></td>
-                <td id="southeast_southeast" data-compass="southeast"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </div>
-      
-    <div id="handlebars_templates">
-      <script id="player_image_template" type="text/x-handlebars-template">
-        <img class="{{playerName}}" src="{{playerImage}}" class="won"></img>
-      </script>
-
-      <script id="inner_game_won" type="text/x-handlebars-template">
-        <img src="{{playerImage}}" class="won {{playerName}}"></img>
-      </script>
-    </div>
-
     <a class="github-fork-ribbon" href="https://github.com/nunogoncalves/TicTacToe-Ultimate" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
 
-    <script src="js/plugins/jquery-2.1.3.min.js"></script>
-    <script src="js/plugins/handlebars-v2.0.0.js"></script>
-    <script src="js/plugins/alertify.js"></script>
-    <script src="js/rules.js"></script>
-    <script src="js/tic_tac_toe.js"></script>
     <script>
-      $(function() {
-        $.ticTacToe.load();
-      });
+
+      const gameState = {
+          open: "open",
+          tie: "tie",
+          X: "X",
+          O: "O",
+      }
+
+      const winningCombinations = [
+        // lines
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        // columns
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        // diagonals
+        [0, 4, 8],
+        [2, 4, 6],
+      ]
+
+      function SubGame() {
+        return {
+
+          state: gameState.open,
+
+          squares: [
+            "", "", "",
+            "", "", "",
+            "", "", "",
+          ],
+
+          canPlayIn: function(square) {
+            return this.squares[square] == "" && this.state == gameState.open
+          },
+
+          playIn: function(square, player) {
+            if (this.canPlayIn(square)) {
+              this.squares[square] = player;
+              this.updateGameState()
+            } else {
+              console.log("Can't play here!")
+            }
+          },
+
+          updateGameState: function() {
+            winningCombinations.find(combination => {
+              if (this.areAllSquaresEqual(combination)) {
+                // Winner!
+                console.log("Inner winner!")
+                this.state = this.squares[combination[0]]
+                return true
+              }
+              return false
+            })
+
+            if (this.state == gameState.open) {
+              if (winningCombinations.every(combination => this.tieIn(combination))) {
+                // Tie!
+                this.state = gameState.tie
+              }
+            }
+          },
+
+          areAllSquaresEqual: function(combination) {
+            return combination.every(i => this.squares[i] == this.squares[combination[0]]) && this.squares[combination[0]] != ""
+          },
+
+          tieIn: function(combination) {
+            return (this.areAllSquaresEqual(combination) == false) && (this.anyOpen(combination) == false)
+          },
+
+          anyOpen: function(combination) {
+            return combination.some(i => this.squares[i] == "")
+          },
+
+          squares_descr: function() {
+            var line1 = this.squares.slice(0, 3).map(square => { return (square == "" ? "-" : square) })
+            var line2 = this.squares.slice(3, 6).map(square => { return (square == "" ? "-" : square) })
+            var line3 = this.squares.slice(6, 9).map(square => { return (square == "" ? "-" : square) })
+            return `\n${line1}\n${line2}\n${line3}`
+          }
+        }
+      }
+
+      Game = {
+
+        state: gameState.open,
+
+        innerGames: [
+          SubGame(), SubGame(), SubGame(),
+          SubGame(), SubGame(), SubGame(),
+          SubGame(), SubGame(), SubGame(),
+        ],
+        
+
+        canPlayIn: function(game, subgame) {
+          return this.innerGames[game].canPlayIn(subgame)
+        },
+
+        playIn: function(game, subgame, player) {
+          this.innerGames[game].playIn(subgame, player)
+          this.updateGameState()
+        },
+
+        updateGameState: function() {
+          print("updating main game state")
+          winningCombinations.find(combination => {
+            print(combination + this.areAllSquaresEqual(combination))
+            if (this.areAllSquaresEqual(combination)) {
+                // Winner!
+                print("main winner!")
+                this.state = this.innerGames[combination[0]].state
+                return true
+              }
+              print("not all the same!")
+              return false
+            })
+
+          if (this.state == gameState.open) {
+            print("checking for tie")
+            if (winningCombinations.every(combination => this.tieIn(combination))) {
+              print("tie!")
+                // Tie!
+                this.state = gameState.tie
+              }
+            }
+          },
+
+          areAllSquaresEqual: function(combination) {
+            return combination.every(i => this.innerGames[i].state == this.innerGames[combination[0]].state) && this.innerGames[combination[0]].state != gameState.open
+          },
+
+          tieIn: function(combination) {
+            return (this.areAllSquaresEqual(combination) == false) && (this.anyOpen(combination) == false)
+          },
+
+          anyOpen: function(combination) {
+            return combination.some(i => this.innerGames[i].state == gameState.open)
+          },        
+      }
+
+      debug = {
+        setTie: function(gamePosition) {
+          game.innerGames[gamePosition].playIn(0, "X"); 
+          game.innerGames[gamePosition].playIn(1, "X"); 
+          game.innerGames[gamePosition].playIn(2, "0"); 
+          game.innerGames[gamePosition].playIn(3, "0"); 
+          game.innerGames[gamePosition].playIn(4, "0"); 
+          game.innerGames[gamePosition].playIn(5, "X"); 
+          game.innerGames[gamePosition].playIn(6, "X"); 
+          game.innerGames[gamePosition].playIn(7, "X"); 
+          game.innerGames[gamePosition].playIn(8, "0"); 
+
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        },
+
+        winner_l1: function(gamePosition, player) {
+          game.innerGames[gamePosition].playIn(0, player); 
+          game.innerGames[gamePosition].playIn(1, player); 
+          game.innerGames[gamePosition].playIn(2, player); 
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        },
+
+        winner_l2: function(gamePosition, player) {
+          game.innerGames[gamePosition].playIn(3, player); 
+          game.innerGames[gamePosition].playIn(4, player); 
+          game.innerGames[gamePosition].playIn(5, player); 
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        },
+        
+        winner_l3: function(gamePosition, player) {
+          game.innerGames[gamePosition].playIn(6, player); 
+          game.innerGames[gamePosition].playIn(7, player); 
+          game.innerGames[gamePosition].playIn(8, player); 
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        },
+
+        winner_c1: function(gamePosition, player) {
+          game.innerGames[gamePosition].playIn(0, player); 
+          game.innerGames[gamePosition].playIn(3, player); 
+          game.innerGames[gamePosition].playIn(6, player); 
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        },
+
+        winner_c2: function(gamePosition, player) {
+          game.innerGames[gamePosition].playIn(1, player); 
+          game.innerGames[gamePosition].playIn(4, player); 
+          game.innerGames[gamePosition].playIn(7, player); 
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        },
+
+        winner_c3: function(gamePosition, player) {
+          game.innerGames[gamePosition].playIn(2, player); 
+          game.innerGames[gamePosition].playIn(5, player); 
+          game.innerGames[gamePosition].playIn(8, player); 
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        },
+
+        winner_d1: function(gamePosition, player) {
+          game.innerGames[gamePosition].playIn(0, player); 
+          game.innerGames[gamePosition].playIn(4, player); 
+          game.innerGames[gamePosition].playIn(8, player); 
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        },
+
+        winner_d2: function(gamePosition, player) {
+          game.innerGames[gamePosition].playIn(2, player); 
+          game.innerGames[gamePosition].playIn(4, player); 
+          game.innerGames[gamePosition].playIn(6, player); 
+          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
+          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        }
+      }
+
+      game = Game;
+
+      function print(object) { console.log(object) }
+
+      function clicked(event) { 
+        let element = event.target
+        let data = element.dataset
+        if (game.canPlayIn(data.gameIndex, data.subgameIndex)) {
+          game.playIn(data.gameIndex, data.subgameIndex, "O")
+          element.innerHTML = `<div class="nought"></div>`
+
+          switch (game.state) {
+            case gameState.O:
+              console.log("O")
+              break;
+            case gameState.X:
+              console.log("X")
+              break;
+            case gameState.open:
+              console.log("O")
+              break;
+            case gameState.tie:
+              console.log("Tie")
+              break;
+          }
+        }
+      }
+
+      (function() {
+        elements = Array.from(document.getElementsByClassName("inner-game-square"))
+          elements.forEach(element => element.onclick = clicked)
+      })()
     </script>
   </body>
 </html>
