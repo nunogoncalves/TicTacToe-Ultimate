@@ -1,114 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="css/game_table.css">
+    <link rel="stylesheet" type="text/css" href="css/switch.css">
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+    <link rel="stylesheet" type="text/css" href="css/centered_square_game.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
-    <style type="text/css">
-
-      /* https://john.hu/centered-square-box/ */
-
-      .container {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .square {
-        align-items: unset;
-        position: relative;
-        width: 80vmin;
-        border: solid clear 5px;
-        box-sizing: border-box;
-      }
-
-      .square:after {
-        content: "";
-        display: block;
-        padding-bottom: 100%;
-      }
-
-      .centered {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .inner-game {
-        width: 33.33%;
-        height: 33.33%; 
-        box-sizing: border-box;
-        border: 3px solid #5A7FFA;
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .inner-game-square {
-        width: 33.33%;
-        height: 33.33%; 
-        box-sizing: border-box;
-        border: 2px solid #33F211;
-      }
-
-      .a,.c, .g, .i {
-        border: 0;
-      }
-
-      .b, .h {
-        border-top: 0;
-        border-bottom: 0;
-      }
-
-      .d, .f {
-        border-left: 0;
-        border-right: 0;
-      }
-
-      .e {}
-
-      .inner-game-container {
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-        border: 10px solid white;
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .nought {
-        width: 100%;
-        height: 100%;
-        border: 5px solid #B12716;
-        border-radius: 50%;
-        box-sizing: border-box;
-      }
-
-      .winner {
-        position: relative;
-        z-index: 10;
-        top: 20px;
-        left: 0;
-        width: 100% !important;
-        height: 100% !important;
-        background-color: rgba(255, 255, 255, 0.65);
-
-      }
-    </style>
+    <style type="text/css"></style>
   </head>
   <body>
-    <div>Next player: Noughts</div>
     <div class="container">
       <div class="square">
         <div id="game_table" class="centered">
           <div id="inner-game-A" class="inner-game a">
             <div class="inner-game-container">
               <div class="inner-game-square a" data-game-index="0" data-subgame-index="0"></div>
-              <div class="inner-game-square b" data-game-index="0" data-subgame-index="1">
-                <div class="nought"></div>
-              </div>
+              <div class="inner-game-square b" data-game-index="0" data-subgame-index="1"></div>
               <div class="inner-game-square c" data-game-index="0" data-subgame-index="2"></div>
               <div class="inner-game-square d" data-game-index="0" data-subgame-index="3"></div>
               <div class="inner-game-square e" data-game-index="0" data-subgame-index="4"></div>
@@ -129,7 +36,6 @@
               <div class="inner-game-square g" data-game-index="1" data-subgame-index="6"></div>
               <div class="inner-game-square h" data-game-index="1" data-subgame-index="7"></div>
               <div class="inner-game-square i" data-game-index="1" data-subgame-index="8"></div>
-              <div class="winner nought"></div>
             </div>
           </div>
           <div id="inner-game-C" class="inner-game c">
@@ -226,15 +132,29 @@
         </div>
       </div>
     </div>
+    <div class="info">
+      Dark Mode:
+      <label class="switch">
+        <input id="theme-input" type="checkbox" onchange="setTheme(this)">
+        <span class="slider round"></span>
+      </label>
+      <p>Next player:</p>
+      <span id="next-player"><img style="width: 100%; height: 100%" src="img/nought.png"></span>
+    </div>
     <a class="github-fork-ribbon" href="https://github.com/nunogoncalves/TicTacToe-Ultimate" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
 
     <script>
 
+      const players = {
+        noughts: "O",
+        crosses: "X"
+      }
+
       const gameState = {
-          open: "open",
-          tie: "tie",
-          X: "X",
-          O: "O",
+        open: "open",
+        tie: "tie",
+        X: players.crosses,
+        O: players.noughts
       }
 
       const winningCombinations = [
@@ -271,15 +191,15 @@
               this.squares[square] = player;
               this.updateGameState()
             } else {
-              console.log("Can't play here!")
+              print("Can't play here!")
             }
           },
 
           updateGameState: function() {
             winningCombinations.find(combination => {
-              if (this.areAllSquaresEqual(combination)) {
+              if (this.areAllSquaresEqual(combination) && this.hasWinner() == false) {
                 // Winner!
-                console.log("Inner winner!")
+                print("Inner winner!" + this.squares)
                 this.state = this.squares[combination[0]]
                 return true
               }
@@ -292,6 +212,10 @@
                 this.state = gameState.tie
               }
             }
+          },
+
+          hasWinner: function() {
+            return this.state == gameState.O || this.state == gameState.X
           },
 
           areAllSquaresEqual: function(combination) {
@@ -324,132 +248,144 @@
           SubGame(), SubGame(), SubGame(),
           SubGame(), SubGame(), SubGame(),
         ],
+
+        availableToPlayNext: [
+          0, 1, 2,
+          3, 4, 5,
+          6, 7, 8
+        ],
         
+        nextPlayer: players.noughts,
 
         canPlayIn: function(game, subgame) {
-          return this.innerGames[game].canPlayIn(subgame)
+          return this.availableToPlayNext.includes(game) && this.innerGames[game].canPlayIn(subgame)
         },
 
         playIn: function(game, subgame, player) {
           this.innerGames[game].playIn(subgame, player)
-          this.updateGameState()
+          this.updateGameState(subgame)
         },
 
-        updateGameState: function() {
-          print("updating main game state")
+        updateGameState: function(subgame) {
           winningCombinations.find(combination => {
-            print(combination + this.areAllSquaresEqual(combination))
             if (this.areAllSquaresEqual(combination)) {
                 // Winner!
                 print("main winner!")
                 this.state = this.innerGames[combination[0]].state
+                this.availableToPlayNext = []
                 return true
               }
-              print("not all the same!")
               return false
-            })
+            }
+          )
 
           if (this.state == gameState.open) {
-            print("checking for tie")
             if (winningCombinations.every(combination => this.tieIn(combination))) {
-              print("tie!")
                 // Tie!
                 this.state = gameState.tie
-              }
             }
-          },
+          }
+          
+          if (this.availableToPlayNext.length == 0) { return }
 
-          areAllSquaresEqual: function(combination) {
-            return combination.every(i => this.innerGames[i].state == this.innerGames[combination[0]].state) && this.innerGames[combination[0]].state != gameState.open
-          },
+          // Where can we play next
+          if (this.innerGames[subgame].state == gameState.open) {
+            this.availableToPlayNext = [subgame]
+          } else {
+            this.availableToPlayNext = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+              .filter(index => this.innerGames[index].state == gameState.open)
+          }
+        },
 
-          tieIn: function(combination) {
-            return (this.areAllSquaresEqual(combination) == false) && (this.anyOpen(combination) == false)
-          },
+        areAllSquaresEqual: function(combination) {
+          return combination.every(i => {
+            return this.innerGames[i].state == this.innerGames[combination[0]].state }
+          ) && this.innerGames[combination[0]].state != gameState.open
+          && this.innerGames[combination[0]].state != gameState.tie
+        },
 
-          anyOpen: function(combination) {
-            return combination.some(i => this.innerGames[i].state == gameState.open)
-          },        
+        tieIn: function(combination) {
+          return (this.areAllSquaresEqual(combination) == false) && (this.anyOpen(combination) == false)
+        },
+
+        anyOpen: function(combination) {
+          return combination.some(i => this.innerGames[i].state == gameState.open)
+        },
+
+        updateUI: function() {
+          let allsubGamesElements = Array.from(document.getElementsByClassName("inner-game-container"))
+          allsubGamesElements.forEach(element => element.classList.remove("can-play-here-only"))
+
+          this.availableToPlayNext.forEach(subgameIndex => { 
+            allsubGamesElements[subgameIndex].classList.add("can-play-here-only")
+          })
+
+          let allIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+          allIndexes.forEach(index => {
+            if (this.innerGames[index].hasWinner()) {
+              let image = this.innerGames[index].state == gameState.O ? "nought" : "cross"
+              let winner = Array.from(allsubGamesElements[index].getElementsByClassName("winner"))
+              if (winner.length > 0) {
+                winner[0].remove()
+              }
+              allsubGamesElements[index].innerHTML = allsubGamesElements[index].innerHTML + `
+                <div class="winner">
+                  <img src="img/${image}.png" class="won">
+                </div>
+                `              
+            } else if (this.innerGames[index].state == gameState.tie) {
+              allsubGamesElements[index].innerHTML = allsubGamesElements[index].innerHTML + `
+                <div class="tie"></div>
+              `
+            }
+          })
+        }
       }
 
       debug = {
-        setTie: function(gamePosition) {
-          game.innerGames[gamePosition].playIn(0, "X"); 
-          game.innerGames[gamePosition].playIn(1, "X"); 
-          game.innerGames[gamePosition].playIn(2, "0"); 
-          game.innerGames[gamePosition].playIn(3, "0"); 
-          game.innerGames[gamePosition].playIn(4, "0"); 
-          game.innerGames[gamePosition].playIn(5, "X"); 
-          game.innerGames[gamePosition].playIn(6, "X"); 
-          game.innerGames[gamePosition].playIn(7, "X"); 
-          game.innerGames[gamePosition].playIn(8, "0"); 
-
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        elementIn: function(game, innergame) {
+          return document
+            .getElementsByClassName("inner-game")[game]
+            .getElementsByClassName("inner-game-square")[innergame]
         },
 
-        winner_l1: function(gamePosition, player) {
-          game.innerGames[gamePosition].playIn(0, player); 
-          game.innerGames[gamePosition].playIn(1, player); 
-          game.innerGames[gamePosition].playIn(2, player); 
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        setTie: function() {
+          [
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [0, 2],
+            [2, 0],
+            [0, 3],
+            [3, 4],
+            [4, 0],
+            [0, 6],
+            [6, 0],
+            [0, 4],
+            [4, 5],
+            [5, 0],
+            [0, 8],
+            [8, 0],
+            [0, 7],
+            [7, 3],
+            [3, 0],
+            [0, 5],
+          ]
+            .forEach(items => {
+            playIn(items[0], items[1], this.elementIn(items[0], items[1])); 
+          })
         },
 
-        winner_l2: function(gamePosition, player) {
-          game.innerGames[gamePosition].playIn(3, player); 
-          game.innerGames[gamePosition].playIn(4, player); 
-          game.innerGames[gamePosition].playIn(5, player); 
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
-        },
-        
-        winner_l3: function(gamePosition, player) {
-          game.innerGames[gamePosition].playIn(6, player); 
-          game.innerGames[gamePosition].playIn(7, player); 
-          game.innerGames[gamePosition].playIn(8, player); 
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
-        },
-
-        winner_c1: function(gamePosition, player) {
-          game.innerGames[gamePosition].playIn(0, player); 
-          game.innerGames[gamePosition].playIn(3, player); 
-          game.innerGames[gamePosition].playIn(6, player); 
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
-        },
-
-        winner_c2: function(gamePosition, player) {
-          game.innerGames[gamePosition].playIn(1, player); 
-          game.innerGames[gamePosition].playIn(4, player); 
-          game.innerGames[gamePosition].playIn(7, player); 
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
-        },
-
-        winner_c3: function(gamePosition, player) {
-          game.innerGames[gamePosition].playIn(2, player); 
-          game.innerGames[gamePosition].playIn(5, player); 
-          game.innerGames[gamePosition].playIn(8, player); 
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
-        },
-
-        winner_d1: function(gamePosition, player) {
-          game.innerGames[gamePosition].playIn(0, player); 
-          game.innerGames[gamePosition].playIn(4, player); 
-          game.innerGames[gamePosition].playIn(8, player); 
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
-        },
-
-        winner_d2: function(gamePosition, player) {
-          game.innerGames[gamePosition].playIn(2, player); 
-          game.innerGames[gamePosition].playIn(4, player); 
-          game.innerGames[gamePosition].playIn(6, player); 
-          console.log("Squares at game " + gamePosition + ": " + game.innerGames[gamePosition].squares_descr())
-          console.log("state at game " + gamePosition + ": " + game.innerGames[gamePosition].state)
+        centerWin: function() {
+          [
+            [4, 3],
+            [3, 4],
+            [4, 5],
+            [5, 4],
+          ]
+            .forEach(items => {
+            playIn(items[0], items[1], this.elementIn(items[0], items[1])); 
+          })
         }
       }
 
@@ -460,30 +396,59 @@
       function clicked(event) { 
         let element = event.target
         let data = element.dataset
-        if (game.canPlayIn(data.gameIndex, data.subgameIndex)) {
-          game.playIn(data.gameIndex, data.subgameIndex, "O")
-          element.innerHTML = `<div class="nought"></div>`
+        let gameIndex = parseInt(data.gameIndex)
+        let innerGameIndex = parseInt(data.subgameIndex)
+        playIn(gameIndex, innerGameIndex, element)
+      }
 
-          switch (game.state) {
-            case gameState.O:
-              console.log("O")
-              break;
-            case gameState.X:
-              console.log("X")
-              break;
-            case gameState.open:
-              console.log("O")
-              break;
-            case gameState.tie:
-              console.log("Tie")
-              break;
-          }
+      function playIn(gameIndex, innerGameIndex, element) {
+        if (game.canPlayIn(gameIndex, innerGameIndex)) {
+          var image = game.nextPlayer == players.noughts ? "nought" : "cross"
+          game.playIn(gameIndex, innerGameIndex, game.nextPlayer)
+          let nextPlayerImage = `<img style="width: 100%; height: 100%" src="img/${image}.png">`
+          element.innerHTML = nextPlayerImage
+          game.updateUI()
+          game.nextPlayer = game.nextPlayer == players.noughts ? players.crosses : players.noughts
+          image = game.nextPlayer == players.noughts ? "nought" : "cross"
+          document.getElementById("next-player").innerHTML = `<img style="width: 200px; height: 200px" src="img/${image}.png">`
+
+        }
+      }
+
+      function setTheme(element) {
+        let rootStyle = document.documentElement.style
+        if (element.checked) {
+          localStorage.setItem('ttt-theme','dark');
+
+          rootStyle.setProperty("--main-bg-color", "black")
+          rootStyle.setProperty("--text-color", "white")
+          rootStyle.setProperty("--play-here-color", "#32485e")
+          rootStyle.setProperty("--main-game-division-color", "#4f78ff")
+          rootStyle.setProperty("--inner-game-division-color", "#30961e")
+          rootStyle.setProperty("--winner-bg-color", "rgba(0, 0, 0, 0.8)")
+          rootStyle.setProperty("--tie-bg-image", "url('img/scribble-white.png')")
+        } else {
+          localStorage.setItem('ttt-theme','light');
+
+          rootStyle.setProperty("--main-bg-color", "white")
+          rootStyle.setProperty("--text-color", "black")
+          rootStyle.setProperty("--play-here-color", "#D1E8FF")
+          rootStyle.setProperty("--main-game-division-color", "#5A7FFA")
+          rootStyle.setProperty("--inner-game-division-color", "#33F211")
+          rootStyle.setProperty("--winner-bg-color", "rgba(255, 255, 255, 0.8)")
+          rootStyle.setProperty("--tie-bg-image", "url('img/scribble.png')")
         }
       }
 
       (function() {
+
+        let theme = localStorage.getItem('ttt-theme');
+        if (theme == "dark") {
+          document.getElementById("theme-input").click()
+        } 
+
         elements = Array.from(document.getElementsByClassName("inner-game-square"))
-          elements.forEach(element => element.onclick = clicked)
+        elements.forEach(element => element.onclick = clicked)
       })()
     </script>
   </body>

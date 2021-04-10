@@ -1,0 +1,9 @@
+:root {
+    --main-bg-color: white;
+    --main-game-division-color: #5A7FFA;
+    --inner-game-division-color: #33F211;
+    --play-here-color: #D1E8FF;
+    --text-color: black;
+    --winner-bg-color: rgba(255, 255, 255, 0.8);
+    --tie-bg-image: url("img/scribble.png")
+}
